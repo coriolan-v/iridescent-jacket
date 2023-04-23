@@ -66,8 +66,8 @@ void setup() {
   gPal = CRGBPalette16( CRGB::Black, CRGB::Pink, CRGB::Pink,  CRGB::White);
 
   //FillLEDsFromPaletteColors();
-
-chooseRandomPalette();
+currentPalette = PinkPalette;  
+  //chooseRandomPalette();
 
    readPot();
 }
@@ -79,7 +79,7 @@ int animationMode = 0;
 
 void loop()
 {
- readPot();
+  readPot();
   //unsigned long currentMillis_changeMode = millis();
 
   //60000
@@ -164,10 +164,39 @@ void FillLEDsFromPaletteColors( uint8_t colorIndex)
 {
   uint8_t brightness = 255;
 
-  for ( int i = 0; i < NUM_LEDS; ++i) {
-    leds[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
-     leds_2[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
-    colorIndex += 3;
+  // for ( int i = 0; i < NUM_LEDS; ++i) {
+  //   leds[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
+  //   leds_2[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
+  //   colorIndex += 3;
+  // }
+
+
+  // for ( int i = 0; i < NUM_LEDS/2; ++i) {
+  //   leds[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
+  //   leds_2[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
+  //   colorIndex += 3;
+  // }
+
+  // for ( int i = NUM_LEDS/2; i < NUM_LEDS; ++i) {
+  //   leds[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
+  //   leds_2[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
+  //   colorIndex -= 3;
+  // }
+
+  // Step 4.  Map from heat cells to LED colors
+  for ( int j = 0; j < NUM_LEDS; j++) {
+    // Scale the heat value from 0-255 down to 0-240
+    // for best results with color palettes.
+   // uint8_t colorindex = scale8( heat[j], 240);
+    CRGB color = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
+    int pixelnumber;
+    if ( gReverseDirection ) {
+      pixelnumber = (NUM_LEDS - 1) - j;
+    } else {
+      pixelnumber = j;
+    }
+    leds[pixelnumber] = color;
+    leds_2[pixelnumber] = color;
   }
 }
 
